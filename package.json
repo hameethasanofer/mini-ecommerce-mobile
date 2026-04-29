@@ -2,8 +2,12 @@
   "name": "mini-ecommerce",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
-    "build": "cd frontend && CI=false npx expo export:web"
+    "build": "cd frontend && CI=false npx expo export --platform web"
   },
   "dependencies": {
     "express": "^4.18.2",
