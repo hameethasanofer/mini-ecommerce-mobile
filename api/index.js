@@ -155,9 +155,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/api", (req, res) => res.json({ status: "ok", message: "API is live" }));
+const router = express.Router();
 
-app.get("/api/products", (req, res) => {
+router.get("/", (req, res) => res.json({ status: "ok", message: "API is live" }));
+
+router.get("/products", (req, res) => {
   const { category, search, sort, brand, minPrice, maxPrice } = req.query;
   let result = [...products];
 
@@ -176,23 +178,23 @@ app.get("/api/products", (req, res) => {
   res.json({ success: true, count: result.length, products: result });
 });
 
-app.get("/api/products/:id", (req, res) => {
+router.get("/products/:id", (req, res) => {
   const product = products.find(p => p.id === req.params.id);
   if (!product) return res.status(404).json({ success: false, message: "Product not found" });
   res.json({ success: true, product });
 });
 
-app.get("/api/categories", (req, res) => {
+router.get("/categories", (req, res) => {
   const categories = ["All", ...new Set(products.map(p => p.category))];
   res.json({ success: true, categories });
 });
 
-app.get("/api/cart", (req, res) => {
+router.get("/cart", (req, res) => {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   res.json({ success: true, cart, total: parseFloat(total.toFixed(2)) });
 });
 
-app.post("/api/cart", (req, res) => {
+router.post("/cart", (req, res) => {
   const { productId, quantity = 1, color, size } = req.body;
   const product = products.find(p => p.id === productId);
   if (!product) return res.status(404).json({ success: false, message: "Product not found" });
@@ -210,7 +212,7 @@ app.post("/api/cart", (req, res) => {
   res.json({ success: true, cart, total: parseFloat(total.toFixed(2)) });
 });
 
-app.patch("/api/cart/:cartItemId", (req, res) => {
+router.patch("/cart/:cartItemId", (req, res) => {
   const { cartItemId } = req.params;
   const { quantity } = req.body;
   const itemIndex = cart.findIndex(item => item.cartItemId === cartItemId);
@@ -221,16 +223,19 @@ app.patch("/api/cart/:cartItemId", (req, res) => {
   res.json({ success: true, cart, total: parseFloat(total.toFixed(2)) });
 });
 
-app.delete("/api/cart/:cartItemId", (req, res) => {
+router.delete("/cart/:cartItemId", (req, res) => {
   const itemIndex = cart.findIndex(item => item.cartItemId === req.params.cartItemId);
   if (itemIndex > -1) cart.splice(itemIndex, 1);
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   res.json({ success: true, cart, total: parseFloat(total.toFixed(2)) });
 });
 
-app.delete("/api/cart", (req, res) => {
+router.delete("/cart", (req, res) => {
   cart = [];
   res.json({ success: true, cart: [], total: 0 });
 });
+
+app.use("/api", router);
+app.get("*", (req, res) => res.status(404).json({ error: "Route not found" }));
 
 module.exports = app;
