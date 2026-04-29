@@ -1,0 +1,13 @@
+{
+  "name": "mini-ecommerce",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && npm install --legacy-peer-deps && npx expo export:web",
+    "postinstall": "cd frontend && npm install --legacy-peer-deps && cd ../backend && npm install"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}
