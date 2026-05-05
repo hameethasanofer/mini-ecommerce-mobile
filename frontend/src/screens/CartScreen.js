@@ -30,8 +30,8 @@ const CartScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const data = await getCart();
-      setCartItems(data.cart);
-      setTotal(data.total);
+      setCartItems(data?.cart || []);
+      setTotal(data?.total || 0);
     } catch (e) { console.error(e); }
     finally {
       setLoading(false);
@@ -43,14 +43,14 @@ const CartScreen = ({ navigation }) => {
 
   const handleUpdateQty = async (id, qty) => {
     const data = await updateCartItem(id, qty);
-    setCartItems(data.cart);
-    setTotal(data.total);
+    setCartItems(data?.cart || []);
+    setTotal(data?.total || 0);
   };
 
   const handleRemove = async (id) => {
     const data = await removeFromCart(id);
-    setCartItems(data.cart);
-    setTotal(data.total);
+    setCartItems(data?.cart || []);
+    setTotal(data?.total || 0);
   };
 
   const renderItem = ({ item }) => (
@@ -136,7 +136,7 @@ const CartScreen = ({ navigation }) => {
             <View style={styles.summaryPanel}>
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Subtotal</Text>
-                <Text style={styles.summaryVal}>${total.toFixed(2)}</Text>
+                <Text style={styles.summaryVal}>${(total || 0).toFixed(2)}</Text>
               </View>
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Shipping</Text>
@@ -147,7 +147,7 @@ const CartScreen = ({ navigation }) => {
               <View style={styles.divider} />
               <View style={styles.summaryRow}>
                 <Text style={styles.totalLabel}>Total</Text>
-                <Text style={styles.totalVal}>${total.toFixed(2)}</Text>
+                <Text style={styles.totalVal}>${(total || 0).toFixed(2)}</Text>
               </View>
               <TouchableOpacity style={{ borderRadius: 20, overflow: 'hidden', marginTop: 16 }}>
                 <LinearGradient

@@ -67,8 +67,8 @@ const HomeScreen = ({ navigation }) => {
         getProducts(params),
         getCategories(),
       ]);
-      setProducts(prodData.products);
-      setCategories(catData.categories);
+      setProducts(prodData?.products || []);
+      setCategories(catData?.categories || ['All']);
     } catch (e) {
       console.error(e);
     } finally {
@@ -230,7 +230,7 @@ const HomeScreen = ({ navigation }) => {
               {/* ── Categories ── */}
               <Text style={styles.sectionLabel}>Categories</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.catList}>
-                {categories.map((cat) => (
+                {categories?.map((cat) => (
                   <TouchableOpacity
                     key={cat}
                     onPress={() => setSelectedCategory(cat)}

@@ -51,13 +51,13 @@ const ProductDetailsScreen = ({ route, navigation }) => {
     const fetchProduct = async () => {
       try {
         const data = await getProductById(id);
-        setProduct(data.product);
-        setSelectedColor(data.product.colors[0]);
-        setSelectedSize(data.product.sizes[0]);
+        setProduct(data?.product);
+        setSelectedColor(data?.product?.colors?.[0]);
+        setSelectedSize(data?.product?.sizes?.[0]);
 
         // Fetch related products
-        const related = await getProducts({ category: data.product.category });
-        setRelatedProducts(related.products.filter(p => p.id !== id).slice(0, 4));
+        const related = await getProducts({ category: data?.product?.category });
+        setRelatedProducts(related?.products?.filter(p => p.id !== id).slice(0, 4) || []);
       } catch (e) { console.error(e); }
       finally { setLoading(false); }
     };
@@ -116,7 +116,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
           {/* Pagination Dots */}
           <View style={styles.dotRow}>
-            {(product.images || [product.image]).map((_, i) => {
+            {(product?.images || [product?.image])?.map((_, i) => {
               const dotWidth = scrollX.interpolate({
                 inputRange: [(i - 1) * width, i * width, (i + 1) * width],
                 outputRange: [8, 20, 8],
@@ -180,7 +180,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
           {/* Colors */}
           <Text style={styles.sectionTitle}>Color — <Text style={styles.selectedValue}>{selectedColor}</Text></Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 24 }}>
-            {product.colors.map((color) => {
+            {product?.colors?.map((color) => {
               const swatch = COLOR_SWATCHES[color] || '#888';
               const isSelected = selectedColor === color;
               return (
@@ -198,7 +198,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
           {/* Sizes */}
           <Text style={styles.sectionTitle}>Size — <Text style={styles.selectedValue}>{selectedSize}</Text></Text>
           <View style={styles.sizesRow}>
-            {product.sizes.map((size) => (
+            {product?.sizes?.map((size) => (
               <TouchableOpacity
                 key={size}
                 onPress={() => setSelectedSize(size)}
@@ -210,11 +210,11 @@ const ProductDetailsScreen = ({ route, navigation }) => {
           </View>
 
           {/* Related Products */}
-          {relatedProducts.length > 0 && (
+          {relatedProducts?.length > 0 && (
             <View style={{ marginTop: 10 }}>
               <Text style={styles.sectionTitle}>You might also like</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 16 }}>
-                {relatedProducts.map((item) => (
+                {relatedProducts?.map((item) => (
                   <ProductCard
                     key={item.id}
                     product={item}
