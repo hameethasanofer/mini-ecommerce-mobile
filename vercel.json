@@ -1,6 +1,8 @@
 {
   "version": 2,
   "rewrites": [
+    { "source": "/api/products", "destination": "/api/products.js" },
+    { "source": "/api/categories", "destination": "/api/categories.js" },
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { "source": "/((?!api/).*)", "destination": "/public/$1" }
   ]
