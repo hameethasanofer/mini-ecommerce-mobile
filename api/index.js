@@ -236,6 +236,15 @@ router.delete("/cart", (req, res) => {
 });
 
 app.use("/api", router);
-app.get("*", (req, res) => res.status(404).json({ error: "Route not found" }));
+app.use("/", router);
+
+app.get("*", (req, res) => {
+  res.status(404).json({ 
+    success: false, 
+    message: "Route not found", 
+    path: req.url,
+    hint: "Try /api/products" 
+  });
+});
 
 module.exports = app;
